@@ -14,6 +14,8 @@ import Filmes.Conteudo;
 public class Cliente extends Usuario{
 	
 	private Set<Recomendacao> conteudoRecomendados = new HashSet<Recomendacao>();
+	private Set<Recomendacao> recomendacoesRecebidas = new HashSet<Recomendacao>();
+	private Recomendacao recebidoRecomendacao;
 	private  LocalDate ultimaRecomendacao = null;
 	private ArrayList<Genero> generoAssistido = new ArrayList<Genero>();
 	private Set<Filme> filmesJaAssistido = new HashSet<Filme>();
@@ -21,6 +23,26 @@ public class Cliente extends Usuario{
 	private Genero genero;
 	private Filme filmeAssistido;
 	private Recomendacao recomendacao;
+	
+	
+	public void recoRecebidas() {
+		for (Recomendacao reco: recomendacoesRecebidas) {
+			System.out.println(reco.getClienteRecomendou());
+			System.out.println(reco.getFilme());
+			System.out.println(reco.getMensagem());
+		}
+	}
+	
+	public  void addRecomendacao() {
+		recomendacoesRecebidas.add(recebidoRecomendacao);
+	}
+	
+	public Recomendacao getRecebidoRecomendacao() {
+		return recebidoRecomendacao;
+	}
+	public void setRecebidoRecomendacao(Recomendacao recebidoRecomendacao) {
+		this.recebidoRecomendacao = recebidoRecomendacao;
+	}
 	
 	public Recomendacao getRecomendacao() {
 		return recomendacao;
