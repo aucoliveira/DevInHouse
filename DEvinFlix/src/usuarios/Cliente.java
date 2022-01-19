@@ -2,22 +2,33 @@ package usuarios;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import Filmes.Filme;
 import Filmes.Genero;
+import recomendacoes.Recomendacao;
 import Filmes.Conteudo;
 
 public class Cliente extends Usuario{
 	
-	private Set<Conteudo> conteudoRecomendados;
+	private Set<Recomendacao> conteudoRecomendados = new HashSet<Recomendacao>();
 	private  LocalDate ultimaRecomendacao = null;
 	private ArrayList<Genero> generoAssistido = new ArrayList<Genero>();
-	private Set<Filme> filmesAssistido;
+	private Set<Filme> filmesJaAssistido = new HashSet<Filme>();
 	private Boolean adimplente = null;
+	private Genero genero;
+	private Filme filmeAssistido;
+	private Recomendacao recomendacao;
 	
-	
+	public Recomendacao getRecomendacao() {
+		return recomendacao;
+	}
+	public void setRecomendacao(Recomendacao recomendacao) {
+		this.recomendacao = recomendacao;
+	}
+	public Cliente() {}
 	public Boolean getAdimplente() {
 		return adimplente;
 	}
@@ -28,33 +39,54 @@ public class Cliente extends Usuario{
 	}
 
 
-	public Set<Filme> getFilmesAssistido() {
-		return filmesAssistido;
+	public Set<Filme> getFilmesJaAssistido() {
+		return filmesJaAssistido;
 	}
-
-
-	// observação
-	public void setFilmesAssistido(Filme filmes) {
-		this.filmesAssistido = (Set<Filme>) filmes;
-		filmes.addAll(filmes);
-	}
-
-
-
 	
 
+	public Genero getGenero() {
+		return genero;
+	}
+	
+	public void setGenero(Genero genero) {
+		this.genero = genero;
+		generoAssistido.add(genero);
+	}
+	public Filme getFilmeAssistido() {
+		return filmeAssistido;
+	}
+	
+	public void setFilmeAssistido(Filme filmeAssistido) {
+		this.filmeAssistido = filmeAssistido;
+		
+	}
+	
+	public void addFilme() {
+		filmesJaAssistido.add(getFilmeAssistido());
+	}
+	
+	public void imprimirFilmesAssistidos() {
+		for (Filme filme: filmesJaAssistido) {
+			System.out.println(filme.getNome());
+		}
+	}
+	
 	public void setGeneroAssistido(ArrayList<Genero> generoAssistido) {
 		this.generoAssistido = generoAssistido;
 		generoAssistido.addAll(generoAssistido);
 	}
 
-
-	public void setFilmesAssistido(Set<Filme> filmesAssistido) {
-		this.filmesAssistido = filmesAssistido;
+	public ArrayList<Genero> generoAssistido() {
+		return generoAssistido;
 	}
-
-
-
+	
+	public Set<Filme> filmeAssistido() {
+		return (Set<Filme>) filmesJaAssistido;
+	}
+	
+	public void setFilmesJáAssistido(Set<Filme> filmesJaAssistido) {
+		this.filmesJaAssistido = filmesJaAssistido;
+	}
 
 
 	public ArrayList<Genero> getGeneroAssistido() {
@@ -62,18 +94,7 @@ public class Cliente extends Usuario{
 	}
 
 
-	public Set<Conteudo> getConteudoRecomendados() {
-		return conteudoRecomendados;
-	}
-
-
-
-	public void setConteudoRecomendados(Set<Conteudo> conteudoRecomendados) {
-		this.conteudoRecomendados = conteudoRecomendados;
-	}
-
-
-
+	
 	public LocalDate getUltimaRecomendacao() {
 		return ultimaRecomendacao;
 	}
@@ -101,5 +122,9 @@ public class Cliente extends Usuario{
 	
 	public Filme  filmesFavoritos(Filme filme) {
 		return filme;
+	}
+	
+	public void addGenero(Genero genero) {
+		generoAssistido.add(genero);
 	}
 }

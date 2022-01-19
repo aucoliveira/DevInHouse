@@ -20,18 +20,23 @@ import usuarios.Cliente;
 
 public class Principal {
 	
-	Scanner scanner = new Scanner(System.in);
-	public ArrayList<Genero> generoAssistido;
+	static Cliente cliente = new Cliente();
+	static Conteudo conteudo;
+	static Scanner scanner = new Scanner(System.in);
+	static ArrayList<Genero> generoAssistido = new ArrayList<Genero>();
+	static Recomendacao recomendacao;
 	
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		
 		// TODO Auto-generated method stub
-		Filme fil1 = new Filme("Matrix"," matrix matrix",null, " TESTE", 0, 0);
+		Filme fil1 = new Filme("Matrix"," matrix matrix",Genero.ACAO, " TESTE", 0, 0);
 		Filme fil2 = new Filme("Interestrelar","fodastico",null, " TESTE", 0, 0);
-		Filme fil3 = new Filme(""," matrix matrix",null, " TESTE", 0, 0);
+		Filme fil3 = new Filme("Eternos"," matrix matrix",null, " TESTE", 0, 0);
 		
 		
 		Cliente cl1 = new Cliente("Augusto", "Rua 9","12/05/1989", " email", "senha");
+		cl1.setAdimplente(false);
+	
 		Cliente cl2 = new Cliente("cesar", "Rua 9","07/05/2014", " email", "senha");
 		Cliente cl3 = new Cliente("Francisco", "Rua 9","07/05/2014", " email", "senha");
 		Cliente cl4 = new Cliente("joao", "Rua 9","07/05/2014", " email", "senha");
@@ -56,57 +61,85 @@ public class Principal {
 		System.out.println("O filme "+fil1.getNome()+" teve "+fil1.getCurtidas()+" curtidas.");
 		
 		*/
-		assistirFilme(cl1, fil1);
 		
+		cl1.setUltimaRecomendacao(LocalDate.of(2021, 12, 1));
+		cliente.setFilmeAssistido(fil3);
+		//System.out.println(cliente.getFilmeAssistido().getNome());
+		//System.out.println(cl1.getAdimplente());
 		
+		//assistirFilme(cl1, fil1);
+		
+		recomendarFilmes(fil1, cl1, cl2);
+		
+		generoClienteMaisAssistido(cl1);
+		generoMaisAssistido(generoAssistido);
+		cliente.imprimirFilmesAssistidos();
 		
 	}
 	
-	public boolean recomendarFilmes(Conteudo conteudo, Cliente cliente) {
+	static void recomendarFilmes(Filme filme, Cliente cliente, Cliente cliente2) {
 		
-		if (cliente.getUltimaRecomendacao() == null || 
-				ChronoUnit.MONTHS.between(cliente.getUltimaRecomendacao(), LocalDate.now())) {
-			
-			cliente.getConteudoRecomendados().add(conteudo);
+		Boolean pode;
+		
+		long mese =  ChronoUnit.MONTHS.between(cliente.getUltimaRecomendacao(), LocalDate.now());
+		if (mese > 0) {
+			pode = true;
+		}else {
+			pode = false;
+		}
+		
+		if (cliente.getUltimaRecomendacao() == null || pode )
+				{
+			System.out.print("Digite a mensagem para o seu amigo.");
+			String mensagem = scanner.nextLine();
+			recomendacao = new Recomendacao(cliente,cliente2, filme, mensagem);
+			cliente.setRecomendacao(recomendacao);
 			cliente.setUltimaRecomendacao(LocalDate.now());
 			
-			return true;
+			System.out.println("Recomendação enviada.");
 		}
-		return false;
+		System.out.println("Você não pode enviar recomendação no momento.");
 	}
 	
-	public  void assistirFilme(Cliente cliente, Filme filmes ) {
+	static void assistirFilme(Cliente cliente, Filme filmes) {
 		
 			
 		System.out.println(" - "+filmes.getNome()+" "+filmes.getSinopse()+" "+filmes.getGenero());
 			
-		if (cliente.getAdimplente().equals(true)) {
-			cliente.setFilmesAssistido(filmes);
+		if (cliente.getAdimplente() == true) {
+			
+			System.out.println("Cliente em dias");
+			cliente.setFilmeAssistido(filmes);
+			System.out.println(cliente.getFilmeAssistido().getNome());
+			cliente.addFilme();
+			System.out.println(cliente.getFilmesJaAssistido());
+			
 			int opcao = 0;
 			
 			do {
 				System.out.println("Deseja Avaliar o Filme?  1 - Sim e  2 - não");
 				opcao = scanner.nextInt();
-			}while(opcao > 0 && opcao <3);
+			}while(!(opcao > 0 && opcao <3));
 			
 			if (opcao == 1) {
 				System.out.println("Digite 1 - curtir ou 2 - para descurtir; ");
 				int opc = scanner.nextInt();
-				if(opc ==1) {
+				if(opc == 1) {
 					filmes.setCurtidas(+1);
 				}else {
 					filmes.setDescurtidas(+1);
 				}
 			
-			cliente.setGeneroAssistido(filmes.getGenero());
+			cliente.addGenero(filmes.getGenero());
 			generoAssistido.add(filmes.getGenero());
 			}
 		}else {
 			System.out.println("O Cliente "+cliente.getNomeCompleto()+" encontra-se inadimplente, favor regularizar!");
 		}
+		System.out.println("Verificando se roda");
 	}
 	
-	public void generoClienteMaisAssistido(Cliente cliente) {
+	static void generoClienteMaisAssistido(Cliente cliente) {
 		
 		Map<Genero, Integer> generoContagem = new HashMap<Genero, Integer>();
 		
@@ -123,11 +156,11 @@ public class Principal {
 		System.out.println(generoContagem);		
 	}
 	
-	public void generoMaisAssistido() {
+	static void generoMaisAssistido(ArrayList<Genero> generoAssistido) {
 			
 			Map<Genero, Integer> generoContagem = new HashMap<Genero, Integer>();
 			
-			for (Genero genero: generoAssistido) {
+			for (Genero genero: Principal.generoAssistido) {
 				int count = 0;
 				for (Genero genero2: generoAssistido) {
 					if (genero.equals(genero2)) {
